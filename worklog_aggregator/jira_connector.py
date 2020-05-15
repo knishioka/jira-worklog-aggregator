@@ -70,7 +70,7 @@ def worklog_to_dict(worklog):
 
     """
     return {
-        'spent_seconds': worklog.timeSpentSeconds,
+        'spent_hours': worklog.timeSpentSeconds/60/60,
         'created': parse(worklog.created).date().strftime('%Y-%m-%d'),
         'updated': parse(worklog.updated).date().strftime('%Y-%m-%d'),
         'user': worklog.updateAuthor.displayName
