@@ -16,3 +16,4 @@ def main(date):
 
 if __name__ == '__main__':
     date = '2020-05-14'
+    main(date)
