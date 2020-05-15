@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 
 from .jira_connector import worklog_dataframe
 
+plt.rcParams['savefig.bbox'] = 'tight'
+
 
 def main(date):
     """Create the summary of worklog."""
