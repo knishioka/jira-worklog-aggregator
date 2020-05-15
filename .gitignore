@@ -133,3 +133,6 @@ dmypy.json
 
 # ipython notebook
 *.ipynb
+
+# image file
+*.png
