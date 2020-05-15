@@ -27,7 +27,7 @@ def worklog_dataframe(date):
     issue_keys = worklog_updated_issue_keys(date)
     return pd.concat(
         [pd.DataFrame(d) for d in map(extract_issue_worklogs, issue_keys)]
-    ).pipe(lambda df: df[df.updated == date])
+    ).pipe(lambda df: df[df.updated == date]).reset_index(drop=True)
 
 
 def worklog_updated_issue_keys(date):
