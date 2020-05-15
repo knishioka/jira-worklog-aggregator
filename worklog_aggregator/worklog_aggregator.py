@@ -1,4 +1,6 @@
 """Get the working summary in JIRA."""
+import argparse
+
 import matplotlib.pyplot as plt
 
 from .jira_connector import worklog_dataframe
@@ -17,5 +19,7 @@ def main(date):
 
 
 if __name__ == '__main__':
-    date = '2020-05-14'
-    main(date)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--date', help='target date of worklog')
+    args = parser.parse_args()
+    main(args.date)
