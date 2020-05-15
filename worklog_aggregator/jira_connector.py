@@ -1,9 +1,7 @@
-"""Get the working summary in JIRA."""
 import os
 from dateutil.parser import parse
 from functools import lru_cache
 
-import pandas as pd
 from jira import JIRA
 
 
@@ -12,22 +10,6 @@ def jira_connection():
     """Create jira connection."""
     options = {'server': os.environ['JIRA_SERVER']}
     return JIRA(options, basic_auth=(os.environ['JIRA_ID'], os.environ['JIRA_TOKEN']))
-
-
-def worklog_dataframe(date):
-    """Get worklog dataframe updated on `date`
-
-    Args:
-        date(str): worklog updated date.
-
-    Returns:
-         pandas.DataFrame: worklog dataframe.
-
-    """
-    issue_keys = worklog_updated_issue_keys(date)
-    return pd.concat(
-        [pd.DataFrame(d) for d in map(extract_issue_worklogs, issue_keys)]
-    ).pipe(lambda df: df[df.updated == date])
 
 
 def worklog_updated_issue_keys(date):
