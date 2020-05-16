@@ -59,7 +59,10 @@ def extract_issue_worklogs(issue_key):
 
     """
     issue = jira_connection().issue(issue_key)
-    return list(map(worklog_to_dict, issue.fields.worklog.worklogs))
+    worklogs = map(worklog_to_dict, issue.fields.worklog.worklogs)
+    issue_info = {'issue_key': issue.key, 'summary': issue.fields.summary}
+    worklogs_with_info = [{**wl, **issue_info} for wl in worklogs]
+    return list(worklogs_with_info)
 
 
 def worklog_to_dict(worklog):
