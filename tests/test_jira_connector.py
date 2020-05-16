@@ -5,27 +5,32 @@ from worklog_aggregator.jira_connector import worklog_to_dict, extract_issue_wor
 
 
 def raw_worklog():
-    return {'self': 'https://example.com/rest/api/2/issue/1001/worklog/2001',
-            'author': {'self': 'https://example.com/rest/api/2/user?accountId=012345',
-                       'accountId': '012345',
-                       'displayName': 'user1',
-                       'active': True,
-                       'timeZone': 'Asia/Tokyo',
-                       'accountType': 'atlassian'},
-            'updateAuthor': {'self': 'https://example.com/rest/api/2/user?accountId=012345',
-                             'accountId': '012345',
-                             'displayName': 'user1',
-                             'active': True,
-                             'timeZone': 'Asia/Tokyo',
-                             'accountType': 'atlassian'},
-            'created': '2020-04-01T17:00:00.000+0900',
-            'updated': '2020-04-01T18:00:00.000+0900',
-            'started': '2020-04-01T11:00:00.000+0900',
-            'timeSpent': '6h',
-            'timeSpentSeconds': 21600,
-            'id': '2001',
-            'issueId': '1001'
-            }
+    return {
+        'self': 'https://example.com/rest/api/2/issue/1001/worklog/2001',
+        'author': {
+            'self': 'https://example.com/rest/api/2/user?accountId=012345',
+            'accountId': '012345',
+            'displayName': 'user1',
+            'active': True,
+            'timeZone': 'Asia/Tokyo',
+            'accountType': 'atlassian'
+        },
+        'updateAuthor': {
+            'self': 'https://example.com/rest/api/2/user?accountId=012345',
+            'accountId': '012345',
+            'displayName': 'user1',
+            'active': True,
+            'timeZone': 'Asia/Tokyo',
+            'accountType': 'atlassian'
+        },
+        'created': '2020-04-01T17:00:00.000+0900',
+        'updated': '2020-04-01T18:00:00.000+0900',
+        'started': '2020-04-01T11:00:00.000+0900',
+        'timeSpent': '6h',
+        'timeSpentSeconds': 21600,
+        'id': '2001',
+        'issueId': '1001'
+    }
 
 
 @pytest.fixture
@@ -36,15 +41,16 @@ def jira_worklog():
 
 @pytest.fixture
 def jira_issue():
-    raw = {'id': '1001',
-           'self': 'https://bebit-sw.atlassian.net/rest/api/2/issue/1001',
-           'key': 'KEY-1',
-           'fields': {
-               'worklog': {
-                   'worklogs': [raw_worklog()]
-               }
-           }
-           }
+    raw = {
+        'id': '1001',
+        'self': 'https://bebit-sw.atlassian.net/rest/api/2/issue/1001',
+        'key': 'KEY-1',
+        'fields': {
+            'worklog': {
+                'worklogs': [raw_worklog()]
+            }
+        }
+    }
     return Issue(None, None, raw=raw)
 
 
