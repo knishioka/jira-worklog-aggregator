@@ -47,7 +47,8 @@ def worklog_updated_issue_keys(start_date, end_date):
         ['KEY-1', 'KEY-2', 'KEY-3']
 
     """
-    issues = jira_connection().search_issues(f"worklogDate >= {start_date} AND  worklogDate <= {end_date}")
+    issues = jira_connection().search_issues(f"worklogDate >= {start_date} AND  worklogDate <= {end_date}",
+                                             maxResults=None)
     return list(map(lambda x: x.key, issues))
 
 
