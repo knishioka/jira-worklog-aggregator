@@ -46,6 +46,7 @@ def jira_issue():
         'self': 'https://bebit-sw.atlassian.net/rest/api/2/issue/1001',
         'key': 'KEY-1',
         'fields': {
+            'summary': 'This is the summary',
             'worklog': {
                 'worklogs': [raw_worklog()]
             }
