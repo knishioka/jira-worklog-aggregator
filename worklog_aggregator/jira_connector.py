@@ -14,12 +14,13 @@ def jira_connection():
     return JIRA(options, basic_auth=(os.environ['JIRA_ID'], os.environ['JIRA_TOKEN']))
 
 
-def worklog_dataframe(start_date, end_date):
-    """Get worklog dataframe updated on `date`.
+def worklog_dataframe(start_date, end_date, include_out_of_date_range=False):
+    """Get worklog dataframe updated between `start_date` and `end_date`.
 
     Args:
         start_date(str): start date of worklog range.
         end_date (str): end date of worklog range.
+        include_out_of_date_range (bool): include worklogs out of specified date range.
 
     Returns:
          pandas.DataFrame: worklog dataframe.
@@ -27,11 +28,14 @@ def worklog_dataframe(start_date, end_date):
     """
     issue_keys = worklog_updated_issue_keys(start_date, end_date)
     date_range = pd.date_range(start_date, end_date).strftime('%Y-%m-%d')
-    return pd.concat(
-        [pd.DataFrame(d) for d in map(extract_issue_worklogs, issue_keys)]
-    ).pipe(lambda df: df[df.updated.isin(date_range)]).reset_index(drop=True)
+    worklog_df = pd.concat([pd.DataFrame(d) for d in map(extract_issue_worklogs, issue_keys)])
+    if include_out_of_date_range:
+        return worklog_df.reset_index(drop=True)
+    else:
+        return worklog_df.pipe(lambda df: df[df.updated.isin(date_range)]).reset_index(drop=True)
 
 
+@lru_cache(None)
 def worklog_updated_issue_keys(start_date, end_date):
     """Get issues which worklog was updated.
 
@@ -52,6 +56,7 @@ def worklog_updated_issue_keys(start_date, end_date):
     return list(map(lambda x: x.key, issues))
 
 
+@lru_cache(None)
 def extract_issue_worklogs(issue_key):
     """Extract issue worklogs.
 

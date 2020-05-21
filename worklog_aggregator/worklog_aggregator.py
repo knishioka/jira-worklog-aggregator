@@ -22,10 +22,31 @@ def main(start_date, end_date):
 
         plt.figure()
         title = f'Top 10 taking time tickets between {start_date} and {end_date}'
-        df.groupby(['issue_key', 'user']).spent_hours.sum().nlargest(10).plot.bar()
-        plt.savefig(f'{start_date}-{end_date}_top10_taking_time.png')
+        df.groupby(['issue_key', 'user']).spent_hours.sum().nlargest(20).plot.bar(title=title)
+        plt.savefig(f'{start_date}-{end_date}_top20_taking_time.png')
+
+        plt.figure()
+        df_with_all_worklog = worklog_dataframe(start_date, end_date, include_out_of_date_range=True).assign(
+            date_category=lambda x: x.updated.apply(categorize_date, args=(start_date, end_date))
+        )
+        long_working_issues = df_with_all_worklog.groupby('issue_key').spent_hours.sum().nlargest(20).index
+        title = f'Top 10 taking time tickets between {start_date} and {end_date} (includes out of date range worklogs)'
+        df_with_all_worklog[df_with_all_worklog.issue_key.isin(long_working_issues)].groupby(
+            ['issue_key', 'user', 'date_category']
+        ).spent_hours.sum().unstack('date_category').plot.bar(title=title, stacked=True)
+        plt.savefig(f'{start_date}-{end_date}_top20_taking_time_with_out_of_date_range_work.png')
     else:
         print(f'No worklogs between {start_date} and {end_date}.')
+
+
+def categorize_date(date, start_date, end_date):
+    """Categorize date."""
+    if date <= start_date:
+        return f'< {start_date}'
+    elif date >= end_date:
+        return f'> {end_date}'
+    else:
+        return f'{start_date} ~ {end_date}'
 
 
 if __name__ == '__main__':
