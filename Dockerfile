@@ -12,5 +12,6 @@ RUN pip install pip==20.1.1 && \
     pip install -r /usr/src/requirements.txt
 
 RUN useradd app
+RUN mkdir -p /home/app && chown -R app:app /home/app
 USER app
 COPY matplotlibrc /home/app/.config/matplotlib/matplotlibrc
