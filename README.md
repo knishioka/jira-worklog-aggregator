@@ -22,3 +22,10 @@ docker build . -t jira-worklog-aggregator
 ```bash
 docker run --rm -it --env-file=.env  -v .:/usr/src jira-worklog-aggregator python -m worklog_aggregator.worklog_aggregator
 ```
+
+
+### Launch jupyter notebook
+
+```bash
+docker run --rm -it --env-file=.env  -v .:/usr/src jira-worklog-aggregator jupyter notebook
+```
