@@ -11,16 +11,14 @@ cp .env.sample .env
 vim .env
 ```
 
-### Install dependent libraries
-
-You can install libraries by pipenv.
+### Build image
 
 ```bash
-pipenv install
+docker build . -t jira-worklog-aggregator
 ```
 
 ### Run Script
 
 ```bash
-pipenv run python -m worklog_aggregator.worklog_aggregator --date 2020-05-14
+docker run --rm -it --env-file=.env  -v .:/usr/src jira-worklog-aggregator python -m worklog_aggregator.worklog_aggregator
 ```
