@@ -14,4 +14,5 @@ RUN pip install pip==20.1.1 && \
 RUN useradd app
 RUN mkdir -p /home/app && chown -R app:app /home/app
 USER app
-COPY matplotlibrc /home/app/.config/matplotlib/matplotlibrc
+COPY config/matplotlibrc /home/app/.config/matplotlib/matplotlibrc
+COPY config/jupyter_notebook_config.py /home/app/.jupyter/jupyter_notebook_config.py
