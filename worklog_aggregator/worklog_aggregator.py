@@ -1,5 +1,6 @@
 """Get the working summary in JIRA."""
 import argparse
+from datetime import datetime, timedelta
 
 import matplotlib.pyplot as plt
 
@@ -53,8 +54,14 @@ def categorize_date(date, start_date, end_date):
 
 
 if __name__ == '__main__':
+    day = datetime.today()
     parser = argparse.ArgumentParser()
-    parser.add_argument('--start_date', help='target start date of worklog')
-    parser.add_argument('--end_date', help='target end date of worklog')
+    parser.add_argument('--start_date',
+                        help='target start date of worklog',
+                        default=(day - timedelta(weeks=1, days=day.weekday())).strftime('%Y-%m-%d'))
+    parser.add_argument('--end_date',
+                        help='target end date of worklog',
+                        default=(day - timedelta(weeks=1, days=day.weekday()-6)).strftime('%Y-%m-%d'))
     args = parser.parse_args()
+
     main(args.start_date, args.end_date)
