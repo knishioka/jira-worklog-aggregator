@@ -1,5 +1,7 @@
 """Get the working summary in JIRA."""
 import argparse
+import json
+import os
 from datetime import datetime, timedelta
 
 import matplotlib.pyplot as plt
@@ -38,6 +40,15 @@ def main(start_date, end_date):
         ).spent_hours.sum().unstack('date_category')
         long_work_df.loc[long_work_df.sum(1).sort_values(ascending=False).index].plot.bar(title=title, stacked=True)
         plt.savefig(f'{start_date}-{end_date}_top{top_n}_taking_time_with_out_of_date_range_work.png')
+
+        if os.getenv('USER_GROUP'):
+            user_group = json.loads(os.getenv('USER_GROUP'))
+            for group, users in user_group.items():
+                group_df = df[df.user.isin(users)]
+                title = f'{group} spent hours on tickets between {start_date} and {end_date}'
+                plt.figure()
+                group_df.groupby('user').spent_hours.sum().sort_values(ascending=False).plot.bar(title=title)
+                plt.savefig(f'{start_date}-{end_date}_{group}_worklog_summary.png')
     else:
         print(f'No worklogs between {start_date} and {end_date}.')
 
