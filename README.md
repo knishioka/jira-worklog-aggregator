@@ -29,3 +29,14 @@ docker run --rm -it --env-file=.env  -v .:/usr/src jira-worklog-aggregator pytho
 ```bash
 docker run --rm -it --env-file=.env  -v .:/usr/src jira-worklog-aggregator jupyter notebook
 ```
+
+## Create Lambda Function
+
+```
+aws lambda create-function \
+    --function-name <your function name> \
+    --runtime python3.8 \
+    --role <your role> \
+    --handler worklog_summary_notifier.worklog_handler \
+    --zip-file fileb://function.zip
+```
