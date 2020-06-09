@@ -31,7 +31,7 @@ jobs:
         pip install -r ../../requirements.txt --target .
         zip -r9 ../function.zip .
         cd "${GITHUB_WORKSPACE}/${LAMBDA_DIR}"
-        zip -g function.zip lambda.py
+        zip -g function.zip worklog_summary_notifier.py
         cd "${GITHUB_WORKSPACE}"
         zip -g lambda/function.zip -r worklog_aggregator
     - name: Update function
