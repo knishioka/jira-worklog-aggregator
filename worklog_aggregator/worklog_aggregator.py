@@ -7,6 +7,7 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 
 from .jira_connector import worklog_dataframe
+from .utils import categorize_date
 
 plt.rcParams['savefig.bbox'] = 'tight'
 plt.rcParams['figure.figsize'] = 12, 8
@@ -51,16 +52,6 @@ def main(start_date, end_date):
                 plt.savefig(f'{start_date}-{end_date}_{group}_worklog_summary.png')
     else:
         print(f'No worklogs between {start_date} and {end_date}.')
-
-
-def categorize_date(date, start_date, end_date):
-    """Categorize date."""
-    if date < start_date:
-        return f'< {start_date}'
-    elif date > end_date:
-        return f'> {end_date}'
-    else:
-        return f'{start_date} ~ {end_date}'
 
 
 if __name__ == '__main__':
