@@ -28,7 +28,7 @@ jobs:
         cd "${GITHUB_WORKSPACE}/${LAMBDA_DIR}"
         mkdir packages
         cd packages
-        pip install -r ../../requirements.txt --target .
+        pip install -r ../requirements.txt --target .
         zip -r9 ../function.zip .
         cd "${GITHUB_WORKSPACE}/${LAMBDA_DIR}"
         zip -g function.zip worklog_summary_notifier.py
