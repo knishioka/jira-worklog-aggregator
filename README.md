@@ -30,9 +30,16 @@ docker run --rm -it --env-file=.env  -v .:/usr/src jira-worklog-aggregator pytho
 docker run --rm -it --env-file=.env  -v .:/usr/src jira-worklog-aggregator jupyter notebook
 ```
 
+## Create Lambda Layer
+
+```bash
+docker build . -t lambda-layer
+docker run --rm -v $(pwd):/dist lambda-layer pandas
+```
+
 ## Create Lambda Function
 
-```
+```bash
 aws lambda create-function \
     --function-name <your function name> \
     --runtime python3.8 \
