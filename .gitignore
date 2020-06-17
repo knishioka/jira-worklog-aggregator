@@ -138,3 +138,5 @@ dmypy.json
 *.png
 
 .DS_Store
+
+*.zip
