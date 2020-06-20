@@ -31,19 +31,15 @@ docker run --rm -it --env-file=.env  -v $(pwd):/usr/src jira-worklog-aggregator 
 ```
 
 ## Lambda Layer
-### Create Lambda Layer
+### Create and Publish Lambda Layer
 
 ```bash
 docker build . -t lambda-layer
 docker run --rm -v $(pwd):/dist lambda-layer pandas
-```
-
-### Publish lambda layer
-
-```bash
 aws lambda publish-layer-version --layer-name pandas --zip-file fileb://layer.zip --compatible-runtimes python3.8
+docker run --rm -v $(pwd):/dist lambda-layer matplotlib
+aws lambda publish-layer-version --layer-name matplotlib --zip-file fileb://layer.zip --compatible-runtimes python3.8
 ```
-
 
 ## Create Lambda Function
 
