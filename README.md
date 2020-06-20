@@ -23,7 +23,6 @@ docker build . -t jira-worklog-aggregator
 docker run --rm -it --env-file=.env  -v $(pwd):/usr/src jira-worklog-aggregator python -m worklog_aggregator.worklog_aggregator
 ```
 
-
 ### Launch jupyter notebook
 
 ```bash
@@ -50,4 +49,21 @@ aws lambda create-function \
     --role <your role> \
     --handler worklog_summary_notifier.worklog_handler \
     --zip-file fileb://function.zip
+```
+
+## Create Image for worklog-summary-notifier
+### Build Image
+```bash
+docker build . -t ${CONTAINER_REGISTRY_PATH}/jira-worklog-summary-notifier -f fargate/Dockerfile
+```
+
+### Create ECR Repository
+```bash
+aws ecr create-repository --repository-name jira-worklog-summary-notifier
+```
+
+### Push image 
+
+```bash
+docker push ${CONTAINER_REGISTRY_PATH}/jira-worklog-summary-notifier
 ```

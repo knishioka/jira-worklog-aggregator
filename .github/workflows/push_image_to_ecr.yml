@@ -1,0 +1,48 @@
+name: Create jira-worklog-summary-notifier image
+
+on:
+  push:
+    branches:
+    - master
+    paths:
+    - 'fargate/Dockerfile'
+    - 'fargate/requirements.txt'
+    - 'fargate/*.py'
+    - '.github/workflows/push_image_to_ecr.yml'
+
+jobs:
+  create-jira-worklog-summary-notifier-image:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ap-northeast-1
+      CONTAINER_REGISTRY_PATH: ${{ secrets.CONTAINER_REGISTRY_PATH }}
+      IMAGE_NAME: jira-worklog-summary-notifier
+    steps:
+    - uses: actions/checkout@master
+    - name: Setup Python 3.8 for awscli
+      uses: actions/setup-python@v1
+      with:
+        version: '3.8'
+        architecture: 'x64'
+    - name: Install awscli
+      run: pip install --upgrade pip awscli
+    - name: Login to ECR
+      run: $(aws ecr get-login --no-include-email --region ap-northeast-1)
+    - name: Define TAG for docker image
+      run: |
+        latest_version=$(aws ecr describe-images --repository-name ${IMAGE_NAME} |
+                         jq -r '.imageDetails[].imageTags[]' |
+                         awk 'match($0, /([0-9]+)/) { print substr( $0, RSTART, RLENGTH )}'  |
+                         sort -nr |
+                         head -1)
+        new_version=$((latest_version + 1))
+        echo "::set-env name=TAG::v${new_version}-$(date '+%Y%m%d')-${GITHUB_SHA}"
+    - name: Build docker image
+      run: |
+        docker build -t ${CONTAINER_REGISTRY_PATH}/${IMAGE_NAME}:${TAG} -f fargate/Dockerfile
+    - name: Push image to ECR
+      run: |
+        docker push ${CONTAINER_REGISTRY_PATH}/${IMAGE_NAME}:${TAG}
