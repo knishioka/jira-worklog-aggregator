@@ -42,7 +42,7 @@ jobs:
         echo "::set-env name=TAG::v${new_version}-$(date '+%Y%m%d')-${GITHUB_SHA}"
     - name: Build docker image
       run: |
-        docker build -t ${CONTAINER_REGISTRY_PATH}/${IMAGE_NAME}:${TAG} -f fargate/Dockerfile
+        docker build . -t ${CONTAINER_REGISTRY_PATH}/${IMAGE_NAME}:${TAG} -f fargate/Dockerfile
     - name: Push image to ECR
       run: |
         docker push ${CONTAINER_REGISTRY_PATH}/${IMAGE_NAME}:${TAG}
