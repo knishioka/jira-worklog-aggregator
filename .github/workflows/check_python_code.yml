@@ -1,6 +1,9 @@
 name: Check python code
 
-on: [push]
+on:
+  push:
+    paths:
+    - '**.py'
 
 jobs:
   check-python-scripts:
