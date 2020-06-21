@@ -1,3 +1,5 @@
+name: Deploy worklog summary notifier lambda
+
 on:
   push:
     branches:
