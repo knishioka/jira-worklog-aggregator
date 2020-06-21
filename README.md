@@ -51,6 +51,7 @@ aws lambda create-function \
     --zip-file fileb://function.zip
 ```
 
+# Run on AWS Fargate
 ## Create Image for worklog-summary-notifier
 ### Build Image
 ```bash
@@ -66,4 +67,31 @@ aws ecr create-repository --repository-name jira-worklog-summary-notifier
 
 ```bash
 docker push ${CONTAINER_REGISTRY_PATH}/jira-worklog-summary-notifier
+```
+
+## Set Up Fargate
+
+```bash
+aws ecs create-cluster --cluster-name fargate-cluster
+```
+
+You need to create a role for `Elastic Container Service Task`.
+```bash
+sed -i \
+    -e "s#EXECUTION_ROLE_ARN#${EXECUTION_ROLE_ARN}#" \
+    -e "s#CONTAINER_REPOSITORY_PATH#${EXECUTION_ROLE_ARN}#" \
+    -e "s#IMAGE_NAME#${IMAGE_NAME}#" \
+    fargate/task_definition.json
+aws ecs register-task-definition --cli-input-json file://fargate/task_definition.json
+```
+
+```bash
+aws ecs create-service \
+  --cluster fargate-cluster \
+  --service-name fargate-service \
+  --task-definition "${FARGATE_TASK_DEFINITION}" \
+  --desired-count 1 \
+  --launch-type "FARGATE" \
+  --network-configuration "awsvpcConfiguration={subnets=[${FARGATE_SUBNET}],securityGroups=[
+${FARGATE_SECURITY_GROUP}]}"
 ```
