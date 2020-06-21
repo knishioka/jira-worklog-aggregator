@@ -1,0 +1,37 @@
+name: Register jira-worklog-summary-notifier task definition
+
+on:
+  push:
+    branches:
+    - master
+    paths:
+    - 'fargate/task_definition.json'
+    - '.github/workflows/register_task_definition.yml'
+
+jobs:
+  register-jira-worklog-summary-notifier-task-definition:
+    name: Register Task Definition
+    runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ap-northeast-1
+      CONTAINER_REGISTRY_PATH: ${{ secrets.CONTAINER_REGISTRY_PATH }}
+      IMAGE_NAME: jira-worklog-summary-notifier
+      EXECUTION_ROLE_ARN: ${{ secrets.EXECUTION_ROLE_ARN }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup Python 3.8 for awscli
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+    - name: Install awscli
+      run: pip install --upgrade pip awscli
+    - name: Register task definition
+      run: |
+        sed -i \
+          -e "s#EXECUTION_ROLE_ARN#${EXECUTION_ROLE_ARN}#" \
+          -e "s#CONTAINER_REPOSITORY_PATH#${EXECUTION_ROLE_ARN}#" \
+          -e "s#IMAGE_NAME#${IMAGE_NAME}#" \
+          fargate/task_definition.json
+        aws ecs register-task-definition --cli-input-json file://fargate/task_definition.json > /dev/null
