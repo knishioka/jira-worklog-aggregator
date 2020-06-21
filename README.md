@@ -1,6 +1,11 @@
 # jira-worklog-aggregator
 Get worklogs on JIRA tickets.
 
+- ![Register jira-worklog-summary-notifier task definition](https://github.com/knishioka/jira-worklog-aggregator/workflows/Register%20jira-worklog-summary-notifier%20task%20definition/badge.svg)
+- ![Create jira-worklog-summary-notifier image](https://github.com/knishioka/jira-worklog-aggregator/workflows/Create%20jira-worklog-summary-notifier%20image/badge.svg)
+- ![Deploy worklog summary notifier lambda](https://github.com/knishioka/jira-worklog-aggregator/workflows/Deploy%20worklog%20summary%20notifier%20lambda/badge.svg)
+- ![Check python code](https://github.com/knishioka/jira-worklog-aggregator/workflows/Check%20python%20code/badge.svg)
+
 ## Quick Start
 ### Setting Env Variables
 
