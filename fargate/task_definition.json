@@ -1,11 +1,11 @@
 {
   "family": "jira-worklog-aggregator-fargate",
   "networkMode": "awsvpc",
-  "executionRoleArn": EXECUTION_ROLE_ARN,
+  "executionRoleArn": "EXECUTION_ROLE_ARN",
   "containerDefinitions": [
     {
       "name": "jira-worklog-summary-notifier",
-      "image": CONTAINER_REPOSITORY_PATH/IMAGE_NAME",
+      "image": "CONTAINER_REPOSITORY_PATH/IMAGE_NAME",
       "essential": true
     }
   ],
