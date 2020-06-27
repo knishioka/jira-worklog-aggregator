@@ -26,6 +26,8 @@ def worklog_dataframe(start_date, end_date, include_out_of_date_range=False):
          pandas.DataFrame: worklog dataframe.
 
     """
+    if start_date > end_date:
+        raise ValueError('start_date must be no later than end_date.')
     issue_keys = worklog_updated_issue_keys(start_date, end_date)
     date_range = pd.date_range(start_date, end_date).strftime('%Y-%m-%d')
     worklog_df = pd.concat([pd.DataFrame(d) for d in map(extract_issue_worklogs, issue_keys)])

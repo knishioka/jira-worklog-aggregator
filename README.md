@@ -31,7 +31,7 @@ docker run --rm -it --env-file=.env  -v $(pwd):/usr/src jira-worklog-aggregator 
 ### Launch jupyter notebook
 
 ```bash
-docker run --rm -it --env-file=.env  -v $(pwd):/usr/src jira-worklog-aggregator jupyter notebook
+docker run --rm -p 8888:8888 -it --env-file=.env  -v $(pwd):/usr/src jira-worklog-aggregator jupyter notebook
 ```
 
 ## Lambda Layer
@@ -68,7 +68,7 @@ docker build . -t ${CONTAINER_REGISTRY_PATH}/jira-worklog-summary-notifier -f fa
 aws ecr create-repository --repository-name jira-worklog-summary-notifier
 ```
 
-### Push image 
+### Push image
 
 ```bash
 docker push ${CONTAINER_REGISTRY_PATH}/jira-worklog-summary-notifier
