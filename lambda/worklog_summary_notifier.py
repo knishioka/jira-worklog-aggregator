@@ -25,5 +25,9 @@ def worklog_handler(event, context):
     long_working_issues = df_with_all_worklog.groupby('issue_key').spent_hours.sum().nlargest(top_n).index
     long_work_df = df_with_all_worklog[df_with_all_worklog.issue_key.isin(long_working_issues)].groupby(
         ['issue_key', 'summary', 'user', 'date_category']
-    ).spent_hours.sum().unstack('date_category')
+    ).spent_hours.sum().unstack('date_category', fill_value=0)
     print(long_work_df)
+
+
+if __name__ == '__main__':
+    worklog_handler({}, {})
