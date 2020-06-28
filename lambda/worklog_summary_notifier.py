@@ -1,6 +1,12 @@
 """Lambda function to notify the summary of worklog."""
 
+import base64
+import json
+import os
 from datetime import datetime, timedelta
+
+import requests
+import boto3
 
 from worklog_aggregator.jira_connector import worklog_dataframe
 from worklog_aggregator.utils import categorize_date
@@ -27,6 +33,30 @@ def worklog_handler(event, context):
         ['issue_key', 'summary', 'user', 'date_category']
     ).spent_hours.sum().unstack('date_category', fill_value=0)
     print(long_work_df)
+
+
+def slack_notify(msg):
+    """Notify message on slack channel.
+
+    Args:
+        msg (str): slack message.
+
+    Returns:
+        requests.models.Response
+
+    """
+    if not msg:
+        return
+    payload_dic = {
+        "text": msg,
+        "username": "Jobcan Lambda Notification",
+        "channel": os.environ['SLACK_CHANNEL'],
+    }
+    client = boto3.client('kms')
+    slack_webhook_url = client.decrypt(
+        CiphertextBlob=base64.b64decode(os.getenv('ENCRYPTED_SLACK_WEBHOOK_URL'))
+    )['Plaintext']
+    return requests.post(slack_webhook_url, data=json.dumps(payload_dic))
 
 
 if __name__ == '__main__':
