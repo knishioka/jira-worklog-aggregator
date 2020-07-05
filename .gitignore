@@ -140,3 +140,5 @@ dmypy.json
 .DS_Store
 
 *.zip
+
+**/packages/**
