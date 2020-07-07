@@ -2,6 +2,7 @@
 import argparse
 import json
 import os
+from functools import reduce
 from datetime import datetime, timedelta
 
 import matplotlib.pyplot as plt
@@ -56,6 +57,9 @@ def main(start_date, end_date):
                 plt.figure()
                 group_df.groupby("user").spent_hours.sum().sort_values(ascending=False).plot.bar(title=title)
                 plt.savefig(f"{start_date}-{end_date}_{group}_worklog_summary.png")
+            users_in_config = reduce(lambda x, y: x | set(y), user_group.values(), set())
+            missing_users = set(df_with_all_worklog.user) - users_in_config
+            print(f"No config for {', '.join(missing_users)}")
     else:
         print(f"No worklogs between {start_date} and {end_date}.")
 
