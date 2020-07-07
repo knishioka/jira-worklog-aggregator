@@ -20,9 +20,10 @@ def main(start_date, end_date):
 
     if not df.empty:
         plt.figure()
-        title = f"Spent hours on tickets between {start_date} and {end_date}"
-        df.groupby("user").spent_hours.sum().sort_values(ascending=False).plot.bar(title=title)
-        plt.savefig(f"{start_date}-{end_date}_worklog_summary.png")
+        title = f'Spent hours on tickets between {start_date} and {end_date}'
+        df.groupby('user').spent_hours.sum().sort_values(ascending=False).plot.bar(title=title)
+        plt.axhline(30, linestyle='dashed', color='red')
+        plt.savefig(f'{start_date}-{end_date}_worklog_summary.png')
 
         top_n = 20
         plt.figure()
