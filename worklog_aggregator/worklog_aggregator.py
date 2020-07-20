@@ -21,10 +21,10 @@ def main(start_date, end_date):
 
     if not df.empty:
         plt.figure()
-        title = f'Spent hours on tickets between {start_date} and {end_date}'
-        df.groupby('user').spent_hours.sum().sort_values(ascending=False).plot.bar(title=title)
-        plt.axhline(30, linestyle='dashed', color='red')
-        plt.savefig(f'{start_date}-{end_date}_worklog_summary.png')
+        title = f"Spent hours on tickets between {start_date} and {end_date}"
+        df.groupby("user").spent_hours.sum().sort_values(ascending=False).plot.bar(title=title)
+        plt.axhline(30, linestyle="dashed", color="red")
+        plt.savefig(f"{start_date}-{end_date}_worklog_summary.png")
 
         top_n = 20
         plt.figure()
@@ -33,7 +33,7 @@ def main(start_date, end_date):
         plt.savefig(f"{start_date}-{end_date}_top{top_n}_taking_time.png")
         plt.figure()
         df_with_all_worklog = worklog_dataframe(start_date, end_date, include_out_of_date_range=True).assign(
-            date_category=lambda x: x.updated.apply(categorize_date, args=(start_date, end_date))
+            date_category=lambda x: x.started.apply(categorize_date, args=(start_date, end_date))
         )
         long_working_issues = df_with_all_worklog.groupby("issue_key").spent_hours.sum().nlargest(top_n).index
         title = (

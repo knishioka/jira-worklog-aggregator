@@ -28,18 +28,18 @@ def worklog_dataframe(start_date, end_date, include_out_of_date_range=False):
     """
     if start_date > end_date:
         raise ValueError("start_date must be no later than end_date.")
-    issue_keys = worklog_updated_issue_keys(start_date, end_date)
+    issue_keys = worklog_logged_issue_keys(start_date, end_date)
     date_range = pd.date_range(start_date, end_date).strftime("%Y-%m-%d")
     worklog_df = pd.concat([pd.DataFrame(d) for d in map(extract_issue_worklogs, issue_keys)])
     if include_out_of_date_range:
         return worklog_df.reset_index(drop=True)
     else:
-        return worklog_df.pipe(lambda df: df[df.updated.isin(date_range)]).reset_index(drop=True)
+        return worklog_df.pipe(lambda df: df[df.started.isin(date_range)]).reset_index(drop=True)
 
 
 @lru_cache(None)
-def worklog_updated_issue_keys(start_date, end_date):
-    """Get issues which worklog was updated.
+def worklog_logged_issue_keys(start_date, end_date):
+    """Get issues which worklog was loogged.
 
     Args:
         start_date (str): start date of worklog range.
@@ -49,7 +49,7 @@ def worklog_updated_issue_keys(start_date, end_date):
         list of str: issue key list.
 
     Examples
-        >>> worklog_updated_issue_keys('2020-01-01', '2020-01-31')
+        >>> worklog_logged_issue_keys('2020-01-01', '2020-01-31')
         ['KEY-1', 'KEY-2', 'KEY-3']
 
     """
@@ -86,6 +86,7 @@ def worklog_to_dict(worklog):
     """
     return {
         "spent_hours": worklog.timeSpentSeconds / 60 / 60,
+        "started": parse(worklog.started).date().strftime("%Y-%m-%d"),
         "created": parse(worklog.created).date().strftime("%Y-%m-%d"),
         "updated": parse(worklog.updated).date().strftime("%Y-%m-%d"),
         "user": worklog.updateAuthor.displayName,
