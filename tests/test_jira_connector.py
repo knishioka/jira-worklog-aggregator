@@ -57,9 +57,10 @@ def test_worklog_started_issue_keys(jira_issue, mocker):
     assert worklog_started_issue_keys("2020-03-01", "2020-03-31") == ["KEY-1"]
 
 
-def test_extract_issue_worklogs(jira_issue, mocker):
+def test_extract_issue_worklogs(jira_issue, jira_worklog, mocker):
     issue_mock = mocker.Mock()
     issue_mock.issue.return_value = jira_issue
+    issue_mock.worklogs.return_value = [jira_worklog]
     mocker.patch("worklog_aggregator.jira_connector.jira_connection").return_value = issue_mock
     assert extract_issue_worklogs("2020-01-01")[0]["spent_hours"] == 6.0
 
