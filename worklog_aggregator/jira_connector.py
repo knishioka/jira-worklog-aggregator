@@ -15,7 +15,7 @@ def jira_connection():
 
 
 def worklog_dataframe(start_date, end_date, include_out_of_date_range=False):
-    """Get worklog dataframe updated between `start_date` and `end_date`.
+    """Get worklog dataframe started between `start_date` and `end_date`.
 
     Args:
         start_date(str): start date of worklog range.
@@ -28,7 +28,7 @@ def worklog_dataframe(start_date, end_date, include_out_of_date_range=False):
     """
     if start_date > end_date:
         raise ValueError("start_date must be no later than end_date.")
-    issue_keys = worklog_logged_issue_keys(start_date, end_date)
+    issue_keys = worklog_started_issue_keys(start_date, end_date)
     date_range = pd.date_range(start_date, end_date).strftime("%Y-%m-%d")
     worklog_df = pd.concat([pd.DataFrame(d) for d in map(extract_issue_worklogs, issue_keys)])
     if include_out_of_date_range:
@@ -38,8 +38,8 @@ def worklog_dataframe(start_date, end_date, include_out_of_date_range=False):
 
 
 @lru_cache(None)
-def worklog_logged_issue_keys(start_date, end_date):
-    """Get issues which worklog was loogged.
+def worklog_started_issue_keys(start_date, end_date):
+    """Get issues which worklog started time is between start_date and end_date.
 
     Args:
         start_date (str): start date of worklog range.
@@ -49,7 +49,7 @@ def worklog_logged_issue_keys(start_date, end_date):
         list of str: issue key list.
 
     Examples
-        >>> worklog_logged_issue_keys('2020-01-01', '2020-01-31')
+        >>> worklog_started_issue_keys('2020-01-01', '2020-01-31')
         ['KEY-1', 'KEY-2', 'KEY-3']
 
     """
