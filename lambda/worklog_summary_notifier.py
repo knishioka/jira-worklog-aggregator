@@ -20,11 +20,15 @@ def worklog_handler(event, context):
     print(f"Notify the summary of worklogs between {start_date} and {end_date}.")
 
     df = worklog_dataframe(start_date, end_date)
-    print(df.groupby("user").spent_hours.sum().sort_values(ascending=False))
+    user_tickets = df.groupby("user").spent_hours.sum().sort_values(ascending=False)
+    print("\n".join([f"{idx}\n{value}" for idx, value in user_tickets.apply(format_spent_time).iteritems()]))
 
     top_n = 10
-    print(df.groupby(["issue_key", "summary", "user"]).spent_hours.sum().nlargest(top_n))
-
+    top_n_spent_time_tickets = df.groupby(["issue_key", "summary", "user"]).spent_hours.sum().nlargest(top_n)
+    top_n_spent_time_ticket_summary = [
+        f"{', '.join(idx)}\n{value}" for idx, value in top_n_spent_time_tickets.apply(format_spent_time).iteritems()
+    ]
+    print("\n".join(top_n_spent_time_ticket_summary))
     df_with_all_worklog = worklog_dataframe(start_date, end_date, include_out_of_date_range=True).assign(
         date_category=lambda x: x.updated.apply(categorize_date, args=(start_date, end_date))
     )
@@ -36,6 +40,11 @@ def worklog_handler(event, context):
         .unstack("date_category", fill_value=0)
     )
     print(long_work_df)
+
+
+def format_spent_time(hour):
+    """Format spent time."""
+    return f"{hour:2.2f} {'■■'*int(hour*2)}"
 
 
 def slack_notify(msg):
