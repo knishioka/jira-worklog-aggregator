@@ -26,7 +26,7 @@ def main(start_date, end_date):
         plt.axhline(30, linestyle="dashed", color="red")
         plt.savefig(f"{start_date}-{end_date}_worklog_summary.png")
 
-        top_n = 20
+        top_n = 10
         plt.figure()
         title = f"Top {top_n} taking time tickets between {start_date} and {end_date}"
         df.groupby(["issue_key", "user"]).spent_hours.sum().nlargest(top_n).plot.bar(title=title)
