@@ -6,3 +6,9 @@ exclude = '''
   | packages
 )/
 '''
+
+[tool.isort]
+include_trailing_comma = true
+line_length = 120
+multi_line_output = 3
+known_third_party = ["boto3", "dateutil", "jira", "matplotlib", "pandas", "pytest", "requests"]
