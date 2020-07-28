@@ -2,8 +2,8 @@
 import argparse
 import json
 import os
-from functools import reduce
 from datetime import datetime, timedelta
+from functools import reduce
 
 import matplotlib.pyplot as plt
 

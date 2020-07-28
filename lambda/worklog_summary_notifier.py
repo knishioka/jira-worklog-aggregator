@@ -5,8 +5,8 @@ import json
 import os
 from datetime import datetime, timedelta
 
-import requests
 import boto3
+import requests
 
 from worklog_aggregator.jira_connector import worklog_dataframe
 from worklog_aggregator.utils import categorize_date

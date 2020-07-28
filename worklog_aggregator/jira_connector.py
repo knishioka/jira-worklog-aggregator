@@ -1,9 +1,9 @@
 """Modules to get issues from JIRA."""
 import os
-from dateutil.parser import parse
 from functools import lru_cache
 
 import pandas as pd
+from dateutil.parser import parse
 from jira import JIRA
 
 

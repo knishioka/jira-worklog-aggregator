@@ -1,7 +1,7 @@
 import pytest
 from jira import Issue, Worklog
 
-from worklog_aggregator.jira_connector import worklog_to_dict, extract_issue_worklogs, worklog_started_issue_keys
+from worklog_aggregator.jira_connector import extract_issue_worklogs, worklog_started_issue_keys, worklog_to_dict
 
 
 def raw_worklog():
