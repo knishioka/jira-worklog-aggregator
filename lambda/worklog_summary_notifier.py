@@ -39,10 +39,11 @@ def worklog_handler(event, context):
         .spent_hours.sum()
         .unstack("date_category", fill_value=0)
     )
+    long_work_df = long_work_df.reindex(long_work_df.sum(axis=1).sort_values(ascending=False).index)
     print(
         "\n".join(
             [
-                f"{idx}\n{value}"
+                f"{', '.join(idx)}\n{value}"
                 for idx, value in long_work_df.fillna(0).apply(format_spent_time_list, axis=1).iteritems()
             ]
         )
@@ -50,7 +51,15 @@ def worklog_handler(event, context):
 
 
 def format_spent_time(hour):
-    """Format spent time."""
+    """Format spent time.
+
+    Args:
+        hour (float): spent hours.
+
+    Returns:
+        str: formatted spent time.
+
+    """
     return f"{hour:2.2f} {'■■'*int(hour*2)}"
 
 
@@ -58,7 +67,7 @@ def format_spent_time_list(hour_list):
     """Format spent time list.
 
     Args:
-        hour_list (`list` of `int`): int list ordered by time span.
+        hour_list (`list` of `float`): int list ordered by time span.
 
     Returns:
         str: formatted hour list.
