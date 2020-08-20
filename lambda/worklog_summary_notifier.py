@@ -47,6 +47,29 @@ def format_spent_time(hour):
     return f"{hour:2.2f} {'■■'*int(hour*2)}"
 
 
+def format_spent_time_list(hour_list):
+    """Format spent time list.
+
+    Args:
+        hour_list (`list` of `int`): int list ordered by time span.
+
+    Returns:
+        str: formatted hour list.
+
+    """
+    before_char = "◁"
+    in_range_char = "■"
+    after_char = "▷"
+    before = hour_list[0]
+    in_range = hour_list[1]
+    after = hour_list[2]
+    return (
+        f"{before:2.2f} (before {before_char}) + {in_range:2.2f} (in range {in_range_char}) + "
+        f"{after:2.2f} (after {after_char})\n"
+        f"{before_char * 2 * int(before)}{in_range_char * 2 * int(in_range * 2)}{after_char * 2 * int(after)}"
+    )
+
+
 def slack_notify(msg):
     """Notify message on slack channel.
 
