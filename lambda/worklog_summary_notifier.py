@@ -39,7 +39,14 @@ def worklog_handler(event, context):
         .spent_hours.sum()
         .unstack("date_category", fill_value=0)
     )
-    print(long_work_df)
+    print(
+        "\n".join(
+            [
+                f"{idx}\n{value}"
+                for idx, value in long_work_df.fillna(0).apply(format_spent_time_list, axis=1).iteritems()
+            ]
+        )
+    )
 
 
 def format_spent_time(hour):
@@ -57,11 +64,11 @@ def format_spent_time_list(hour_list):
         str: formatted hour list.
 
     """
-    before_char = "◁"
     in_range_char = "■"
+    before_char = "◁"
     after_char = "▷"
-    before = hour_list[0]
-    in_range = hour_list[1]
+    in_range = hour_list[0]  # FIXME: This assumes that the list is in specific order (in_range, before, after)
+    before = hour_list[1]
     after = hour_list[2]
     return (
         f"{before:2.2f} (before {before_char}) + {in_range:2.2f} (in range {in_range_char}) + "
