@@ -63,11 +63,7 @@ def notify_summary(df):
 
     """
     user_tickets = df.groupby("user").spent_hours.sum().sort_values(ascending=False)
-    print(
-        slack_notify(
-            "\n".join([f"{idx}\n{value}" for idx, value in user_tickets.apply(format_spent_time).iteritems()])
-        ).text
-    )
+    slack_notify("\n".join([f"{idx}\n{value}" for idx, value in user_tickets.apply(format_spent_time).iteritems()]))
 
 
 def notify_long_work_tickets(df, top_n):
@@ -151,7 +147,7 @@ def slack_notify(msg):
     if not msg:
         return
     payload_dic = {
-        "text": msg,
+        "text": f"```\n{msg}\n```",
         "username": "Jobcan Lambda Notification",
         "channel": os.environ["SLACK_CHANNEL"],
     }
@@ -162,6 +158,7 @@ def slack_notify(msg):
     res = requests.post(slack_webhook_url, data=json.dumps(payload_dic))
     if not res.ok:
         print(res.text)
+        print(f"slack channel: {os.environ['SLACK_CHANNEL']}")
         res.raise_for_status()
 
 
