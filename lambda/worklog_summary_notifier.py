@@ -20,15 +20,27 @@ def worklog_handler(event, context):
     print(f"Notify the summary of worklogs between {start_date} and {end_date}.")
 
     df = worklog_dataframe(start_date, end_date)
-    user_tickets = df.groupby("user").spent_hours.sum().sort_values(ascending=False)
-    print("\n".join([f"{idx}\n{value}" for idx, value in user_tickets.apply(format_spent_time).iteritems()]))
+    notify_summary(df)
 
     top_n = 10
-    top_n_spent_time_tickets = df.groupby(["issue_key", "summary", "user"]).spent_hours.sum().nlargest(top_n)
-    top_n_spent_time_ticket_summary = [
-        f"{', '.join(idx)}\n{value}" for idx, value in top_n_spent_time_tickets.apply(format_spent_time).iteritems()
-    ]
-    print("\n".join(top_n_spent_time_ticket_summary))
+    notify_long_work_tickets(df, top_n)
+
+    long_work_df = long_worklog_dataframe(start_date, end_date, top_n)
+    notify_long_work_tickets_all_range(long_work_df)
+
+
+def long_worklog_dataframe(start_date, end_date, top_n):
+    """Create long worklog dataframe including out of range.
+
+    Args:
+        start_date (str): start date formatted as "%Y-%m-%d".
+        end_date (str): end date formatted as "%Y-%m-%d".
+        top_n (int): num of top.
+
+    Returns:
+        pandas.DataFrame
+
+    """
     df_with_all_worklog = worklog_dataframe(start_date, end_date, include_out_of_date_range=True).assign(
         date_category=lambda x: x.updated.apply(categorize_date, args=(start_date, end_date))
     )
@@ -40,7 +52,47 @@ def worklog_handler(event, context):
         .unstack("date_category", fill_value=0)
     )
     long_work_df = long_work_df.reindex(long_work_df.sum(axis=1).sort_values(ascending=False).index)
+    return long_work_df
+
+
+def notify_summary(df):
+    """Notify worklog summary.
+
+    Args:
+        df (pandas.DataFrame): user worklog dataframe.
+
+    """
+    user_tickets = df.groupby("user").spent_hours.sum().sort_values(ascending=False)
     print(
+        slack_notify(
+            "\n".join([f"{idx}\n{value}" for idx, value in user_tickets.apply(format_spent_time).iteritems()])
+        ).text
+    )
+
+
+def notify_long_work_tickets(df, top_n):
+    """Notify long work tickets.
+
+    Args:
+        df (pandas.DataFrame): user worklog dataframe.
+        top_n (int): num of top.
+
+    """
+    top_n_spent_time_tickets = df.groupby(["issue_key", "summary", "user"]).spent_hours.sum().nlargest(top_n)
+    top_n_spent_time_ticket_summary = [
+        f"{', '.join(idx)}\n{value}" for idx, value in top_n_spent_time_tickets.apply(format_spent_time).iteritems()
+    ]
+    slack_notify("\n".join(top_n_spent_time_ticket_summary))
+
+
+def notify_long_work_tickets_all_range(long_work_df):
+    """Notify long work tickets in all range.
+
+    Args:
+        long_work_df (pandas.DataFrame): user worklog dataframe including out of range.
+
+    """
+    slack_notify(
         "\n".join(
             [
                 f"{', '.join(idx)}\n{value}"
@@ -107,7 +159,10 @@ def slack_notify(msg):
     slack_webhook_url = client.decrypt(CiphertextBlob=base64.b64decode(os.getenv("ENCRYPTED_SLACK_WEBHOOK_URL")))[
         "Plaintext"
     ]
-    return requests.post(slack_webhook_url, data=json.dumps(payload_dic))
+    res = requests.post(slack_webhook_url, data=json.dumps(payload_dic))
+    if not res.ok:
+        print(res.text)
+        res.raise_for_status()
 
 
 if __name__ == "__main__":
