@@ -5,7 +5,7 @@ on:
     branches:
     - master
     paths:
-    - lambda/**
+    - worklog_notifier_lambda/**
     - worklog_aggregator/**
     - .github/workflows/deploy_lambda.yml
 jobs:
@@ -13,7 +13,7 @@ jobs:
     name: Deploy lambda
     runs-on: ubuntu-latest
     env:
-      LAMBDA_DIR: lambda
+      LAMBDA_DIR: worklog_notifier_lambda
       FUNCTION_NAME: ${{ secrets.FUNCTION_NAME }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -41,7 +41,7 @@ jobs:
         cd "${GITHUB_WORKSPACE}/${LAMBDA_DIR}"
         zip -g function.zip worklog_summary_notifier.py
         cd "${GITHUB_WORKSPACE}"
-        zip -g lambda/function.zip -r worklog_aggregator
+        zip -g ${GITHUB_WORKSPACE}/${LAMBDA_DIR}/function.zip -r worklog_aggregator
     - name: Update function
       run: |
         aws lambda update-function-code \
