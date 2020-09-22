@@ -8,7 +8,7 @@ RUN apt-get update && \
 
 COPY requirements.txt /usr/src/requirements.txt
 
-RUN pip install pip==20.1.1 && \
+RUN pip install pip==20.2.3 && \
     pip install -r /usr/src/requirements.txt
 
 RUN useradd app
