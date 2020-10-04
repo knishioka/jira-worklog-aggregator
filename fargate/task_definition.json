@@ -6,7 +6,25 @@
     {
       "name": "jira-worklog-summary-notifier",
       "image": "CONTAINER_REPOSITORY_PATH/IMAGE_NAME",
-      "essential": true
+      "essential": true,
+      "environment": [
+        {
+          "name": "JIRA_SERVER",
+          "value": "JIRA_SERVER"
+        },
+        {
+          "name": "JIRA_ID",
+          "value": "JIRA_ID"
+        },
+        {
+          "name": "JIRA_TOKEN",
+          "value": "JIRA_TOKEN"
+        },
+        {
+          "name": "USER_GROUP",
+          "value": "USER_GROUP"
+        }
+      ]
     }
   ],
   "requiresCompatibilities": [

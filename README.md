@@ -81,6 +81,7 @@ aws ecs create-cluster --cluster-name fargate-cluster
 ```
 
 You need to create a role for `Elastic Container Service Task`.
+
 ```bash
 sed -i \
     -e "s#EXECUTION_ROLE_ARN#${EXECUTION_ROLE_ARN}#" \
