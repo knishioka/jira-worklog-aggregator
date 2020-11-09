@@ -84,9 +84,12 @@ You need to create a role for `Elastic Container Service Task`.
 
 ```bash
 sed -i \
-    -e "s#EXECUTION_ROLE_ARN#${EXECUTION_ROLE_ARN}#" \
-    -e "s#CONTAINER_REPOSITORY_PATH#${EXECUTION_ROLE_ARN}#" \
-    -e "s#IMAGE_NAME#${IMAGE_NAME}#" \
+    -e "s#TMP_EXECUTION_ROLE_ARN#${EXECUTION_ROLE_ARN}#" \
+    -e "s#TMP_CONTAINER_REPOSITORY_PATH#${EXECUTION_ROLE_ARN}#" \
+    -e "s#TMP_IMAGE_NAME#${IMAGE_NAME}#" \
+    -e "s#TMP_JIRA_ID#${JIRA_ID}#" \
+    -e "s#TMP_JIRA_SERVER#${JIRA_SERVER}#" \
+    -e "s#TMP_JIRA_TOKEN#${JIRA_TOKEN}#" \
     fargate/task_definition.json
 aws ecs register-task-definition --cli-input-json file://fargate/task_definition.json
 ```

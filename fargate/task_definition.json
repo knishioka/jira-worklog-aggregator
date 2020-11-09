@@ -1,11 +1,11 @@
 {
   "family": "jira-worklog-aggregator-fargate",
   "networkMode": "awsvpc",
-  "executionRoleArn": "EXECUTION_ROLE_ARN",
+  "executionRoleArn": "TMP_EXECUTION_ROLE_ARN",
   "containerDefinitions": [
     {
       "name": "jira-worklog-summary-notifier",
-      "image": "CONTAINER_REPOSITORY_PATH/IMAGE_NAME",
+      "image": "TMP_CONTAINER_REPOSITORY_PATH/TMP_IMAGE_NAME",
       "essential": true,
       "environment": [
         {
@@ -14,15 +14,15 @@
         },
         {
           "name": "JIRA_ID",
-          "value": "JIRA_ID"
+          "value": "TMP_JIRA_ID"
         },
         {
           "name": "JIRA_TOKEN",
-          "value": "JIRA_TOKEN"
+          "value": "TMP_JIRA_TOKEN"
         },
         {
           "name": "USER_GROUP",
-          "value": "USER_GROUP"
+          "value": "TMP_USER_GROUP"
         }
       ]
     }
