@@ -22,6 +22,7 @@ jobs:
       JIRA_ID: ${{ secrets.JIRA_ID }}
       JIRA_SERVER: ${{ secrets.JIRA_SERVER }}
       JIRA_TOKEN: ${{ secrets.JIRA_TOKEN }}
+      USER_GROUP: ${{ secrets.USER_GROUP }}
     steps:
     - uses: actions/checkout@v2
     - name: Setup Python 3.8 for awscli
@@ -39,5 +40,6 @@ jobs:
           -e "s#TMP_JIRA_ID#${JIRA_ID}#" \
           -e "s#TMP_JIRA_SERVER#${JIRA_SERVER}#" \
           -e "s#TMP_JIRA_TOKEN#${JIRA_TOKEN}#" \
+          -e "s#TMP_USER_GROUP#${USER_GROUP}#" \
           fargate/task_definition.json
         aws ecs register-task-definition --cli-input-json file://fargate/task_definition.json > /dev/null

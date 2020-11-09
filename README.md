@@ -90,6 +90,7 @@ sed -i \
     -e "s#TMP_JIRA_ID#${JIRA_ID}#" \
     -e "s#TMP_JIRA_SERVER#${JIRA_SERVER}#" \
     -e "s#TMP_JIRA_TOKEN#${JIRA_TOKEN}#" \
+    -e "s#TMP_USER_GROUP#${USER_GROUP}#" \
     fargate/task_definition.json
 aws ecs register-task-definition --cli-input-json file://fargate/task_definition.json
 ```
