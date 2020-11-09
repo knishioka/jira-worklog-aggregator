@@ -22,7 +22,7 @@
         },
         {
           "name": "USER_GROUP",
-          "value": "TMP_USER_GROUP"
+          "value": TMP_USER_GROUP
         }
       ]
     }
