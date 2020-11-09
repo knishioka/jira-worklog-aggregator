@@ -10,7 +10,7 @@
       "environment": [
         {
           "name": "JIRA_SERVER",
-          "value": "JIRA_SERVER"
+          "value": "TMP_JIRA_SERVER"
         },
         {
           "name": "JIRA_ID",
