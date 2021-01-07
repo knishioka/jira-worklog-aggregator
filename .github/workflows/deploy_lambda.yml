@@ -46,4 +46,4 @@ jobs:
       run: |
         aws lambda update-function-code \
           --function-name "${FUNCTION_NAME}" \
-          --zip-file "fileb://${GITHUB_WORKSPACE}/${LAMBDA_DIR}/function.zip" > /dev/null
+          --zip-file "fileb://${GITHUB_WORKSPACE}/${LAMBDA_DIR}/function.zip" > /dev/null 2>&1
